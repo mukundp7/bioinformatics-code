@@ -33,6 +33,41 @@ def validateSeq(seq):
         if nuc not in DNA_Nucleotides:
             return False
     return tmpseq
+     
+Transcription function(DNA --> RNA):
+def transcription(seq):
+    return seq.replace("T", "U")
+
+Generating a DNA Reverse Complement strand: 
+def reverse_complement(seq):
+    return ''.join([DNA_ReverseComplement[nuc] for nuc in seq])[::-1]
+
+Calculating the GC content in a sequence:
+def gc_content(seq):
+    return round((seq.count('C') + seq.count('G')) / len(seq) * 100)
+
+GC content in a specific defined segment of the sequence:
+def gc_content_subsec(seq, k=5):
+    res = []
+    for i in range(0, len(seq) - k + 1, k):
+        subseq = seq[i:i + k]
+        res.append(gc_content(subseq))
+    return res
+   
+Translation of a sequence into an amino acid sequence:
+def translate_seq(seq, init_pos=0):
+    return [DNA_Codons[seq[pos:pos + 3]] for pos in range(init_pos, len(seq) - 2, 3)]
     
-    
-    
+Codon frequency in a given sequence:
+def codon_usage(seq, aminoacid):
+    tmpList = []
+    for i in range(0, len(seq) - 2, 3):
+        if DNA_Codons[seq[i:i + 3]] == aminoacid:
+            tmpList.append(seq[i:i + 3])
+
+    freqDict = dict(Counter(tmpList))
+    totalWight = sum(freqDict.values())
+    for seq in freqDict:
+        freqDict[seq] = round(freqDict[seq] / totalWight, 2)
+    return freqDict
+ 
