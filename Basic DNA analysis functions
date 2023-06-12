@@ -70,4 +70,13 @@ def codon_usage(seq, aminoacid):
     for seq in freqDict:
         freqDict[seq] = round(freqDict[seq] / totalWight, 2)
     return freqDict
- 
+
+Nucleotide Frequency:
+def nucleotide_frequency(seq):
+    tmpFreqDict = {"A": 0, "C": 0, "G": 0, "T": 0}
+    for nuc in seq:
+        tmpFreqDict[nuc] += 1
+    return tmpFreqDict
+   
+
+
