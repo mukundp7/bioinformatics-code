@@ -1,7 +1,7 @@
 DNA_Nucleotides = ['A', 'C', 'G', 'T']
 DNA_ReverseComplement = {'A' : 'T', 'C' : 'G', 'G' : 'C', 'T' : 'A'}
 
-Codon Table:
+# Codon Table:
 DNA_Codons = {
     "GCT": "A", "GCC": "A", "GCA": "A", "GCG": "A",
     "TGT": "C", "TGC": "C",
@@ -26,7 +26,7 @@ DNA_Codons = {
     "TAA": "_", "TAG": "_", "TGA": "_"
 }
 
-Validation of a DNA string:
+# Validation of a DNA string:
 def validateSeq(seq):
     tmpseq = seq.upper()
     for nuc in tmpseq:
@@ -34,19 +34,19 @@ def validateSeq(seq):
             return False
     return tmpseq
      
-Transcription function(DNA --> RNA):
+# Transcription function(DNA --> RNA):
 def transcription(seq):
     return seq.replace("T", "U")
 
-Generating a DNA Reverse Complement strand: 
+# Generating a DNA Reverse Complement strand: 
 def reverse_complement(seq):
     return ''.join([DNA_ReverseComplement[nuc] for nuc in seq])[::-1]
 
-Calculating the GC content in a sequence:
+# Calculating the GC content in a sequence:
 def gc_content(seq):
     return round((seq.count('C') + seq.count('G')) / len(seq) * 100)
 
-GC content in a specific defined segment of the sequence:
+# GC content in a specific defined segment of the sequence:
 def gc_content_subsec(seq, k=5):
     res = []
     for i in range(0, len(seq) - k + 1, k):
@@ -54,11 +54,11 @@ def gc_content_subsec(seq, k=5):
         res.append(gc_content(subseq))
     return res
    
-Translation of a sequence into an amino acid sequence:
+# Translation of a sequence into an amino acid sequence:
 def translate_seq(seq, init_pos=0):
     return [DNA_Codons[seq[pos:pos + 3]] for pos in range(init_pos, len(seq) - 2, 3)]
     
-Codon frequency in a given sequence:
+# Codon frequency in a given sequence:
 def codon_usage(seq, aminoacid):
     tmpList = []
     for i in range(0, len(seq) - 2, 3):
@@ -71,7 +71,7 @@ def codon_usage(seq, aminoacid):
         freqDict[seq] = round(freqDict[seq] / totalWight, 2)
     return freqDict
 
-Nucleotide Frequency:
+# Nucleotide Frequency:
 def nucleotide_frequency(seq):
     tmpFreqDict = {"A": 0, "C": 0, "G": 0, "T": 0}
     for nuc in seq:
