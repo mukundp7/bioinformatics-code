@@ -1,0 +1,41 @@
+# Installing the necessary packages
+!pip install -q condacolab
+import condacolab
+condacolab.install()
+!conda install -c bioconda -y mafft
+%pip install Biopython
+from Bio import SeqIO
+
+# Reading the sequences with BioPythons SeqIO (ex: coronavirus variants)
+fasta = list(SeqIO.parse('coronavirus_strains.fasta', format = 'fasta'))
+fasta
+
+# Printing the FASTA sequence names
+for entry in fasta:
+  print(entry.id)
+  
+# Converting the list to a dictionary 
+seqs = {}
+for entry in fasta:
+  seqs[entry.id] = entry
+ 
+# To find specific sequence record in the dictionary 
+seqs['Alpha_Strain'] 
+
+# To find the nucleotide sequence
+seqs['Alpha_Strain'].seq
+
+# To find the length of each sequence
+for entry in fasta:
+  print(len(entry.seq))
+ 
+# Alignment using MAFFT 
+!mafft coronavirus_strains.fasta > seqs_ali.fasta
+
+# Aligned sequences can then be re run through the programs
+fasta = list(SeqIO.parse('seqs_ali.fasta', format = 'fasta'))
+
+# Length function will show that all the aligned sequences are the same length
+for entry in fasta:
+  print(len(entry.seq))
+  
