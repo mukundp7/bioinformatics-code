@@ -7,7 +7,7 @@ condacolab.install()
 from Bio import SeqIO
 
 # Reading the sequences with BioPythons SeqIO (ex: coronavirus variants)
-fasta = list(SeqIO.parse('coronavirus_strains.fasta', format = 'fasta'))
+fasta = list(SeqIO.parse('sequences.fasta', format = 'fasta'))
 fasta
 
 # Printing the FASTA sequence names
@@ -30,7 +30,7 @@ for entry in fasta:
   print(len(entry.seq))
  
 # Alignment using MAFFT 
-!mafft coronavirus_strains.fasta > seqs_ali.fasta
+!mafft sequences.fasta > seqs_ali.fasta
 
 # Aligned sequences can then be re run through the programs
 fasta = list(SeqIO.parse('seqs_ali.fasta', format = 'fasta'))
@@ -78,9 +78,63 @@ def get_mutations(initial, variant):
       print(nt[0].upper() + str(pos) + nt[1].upper())
 
 # To print the nucleotide differences between the two strains (frame deletions or insertions)
-get_mutations(spikes['Wuhan_strain'], spikes['B.1.1.529|Omicron'])
+get_mutations(spikes['Reference_Strain'], spikes['Variant_Strain'])
 
+# Take the spike sequences get rid of the gaps and translate them to a new file
+with open('spikes.fasta', 'w') as f:
+  for spike in spikes:
+    out = spikes[spike].replace('-', '').translate()
+    f.write('>'+ spike + '\n')
+    f.write(str(out).upper()+'\n')
 
+# Alignment
+!mafft spikes.fasta > spikes_ali.fasta
 
+# Reading the amino acid sequences
+spikes_aa = list(SeqIO.parse('spikes_ali.fasta', format = 'fasta'))
+spikes_aa
+
+# Making a dictionary 
+seqs = {}
+for entry in spikes_aa:
+  seqs[entry.id] = entry.seq
+
+# Finding mutations in the strain compared to the reference to a list
+def get_aa_mutations(initial, variant):
+  out = []
+  seqs = list(zip(initial, variant))
+  for pos, aa in enumerate(seqs):
+    if aa[0] != aa[1]:
+      out.append(aa[0].upper() + str(pos) + aa[1].upper())
+  return out
+
+get_aa_mutations(seqs['Reference_Strain'], seqs['Variant_Strain'])
+len(get_aa_mutations(seqs['Reference_Strain'], seqs['Variant_Strain']))
+
+# Charting the differences in spike proteins
+import matplotlib.pyplot as plt
+
+mutations = {}
+for item in seqs:
+  mutations[item] = get_aa_mutations(seqs['Reference_Strain'], seqs[item])
+
+plt.figure(figsize = (15,5))
+for y, item in enumerate(seqs):
+  plt.plot((0, len(seqs['Reference_Strain'])), (y,y), color = 'lightgrey')
+  plt.text(-160, y+.5, item, va = 'center', ha = 'left')
+
+  for yy, mutation in enumerate(mutations[item]):
+    pos = int(mutation[1:-1])
+    aa_change = mutation[-1]
+    if yy%3 == 0:
+      plt.text(pos, y-.2, aa_change, va = 'center', ha = 'center')
+    elif yy%2 == 0:
+      plt.text(pos, y, aa_change, va = 'center', ha = 'center')
+    else:
+      plt.text(pos, y+.2, aa_change, va = 'center', ha = 'center')
+
+    pass
+  plt.xlim(-175, len(seqs['Reference_Strain']) + 100)
+  plt.ylim(-.75, 5.75)
 
   
