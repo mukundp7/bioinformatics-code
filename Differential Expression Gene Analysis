@@ -1,6 +1,6 @@
-Analysis using pydeseq2 to find significant differentially expressed genes
+# Analysis using pydeseq2 to find significant differentially expressed genes
 
-Installing package:
+# Installing package:
 %pip install pydeseq2
 
 from pydeseq2.dds import DeseqDataSet
@@ -8,7 +8,7 @@ from pydeseq2.ds import DeseqStats
 
 import pandas as pd
 
-Generating a counts table from our csv data:
+# Generating a counts table from our csv data:
 counts = pd.read_csv('count_table.csv')
 
 counts = counts.set_index('GeneID') # Set the dataframe index column to the GeneID
@@ -17,11 +17,11 @@ counts = counts.transpose() # For pyedeseq2 you must transpose the counts table
 
 counts = counts.round(decimals=0, out=None) # Might be needed
 
-Generating a metadata dataframe: 
+# Generating a metadata dataframe: 
 metadata = pd.DataFrame(zip(counts.index, ['Sample 1', 'Sample 2', 'Sample 3', 'Sample 4', 'Sample 5', 'Sample 6', 'Sample 7', 'Sample 8', 'Sample 9', 'Sample 10']), columns = ['Sample', 'Condition']) 
 metadata = metadata.set_index('Sample')
 
-Differential Expression Analysis:
+# Differential Expression Analysis:
 dds = DeseqDataSet(counts=counts,
              clinical=metadata,
              design_factors="Condition")
@@ -35,7 +35,7 @@ stat_res.summary()
 res = stat_res.results_df
 res # The differentially expressed dataframe
 
-Convert the gene ids to actual gene symbols:
+# Convert the gene ids to actual gene symbols:
 %pip install sanbomics
 from sanbomics.tools import id_map
 mapper = id_map(species = 'human')
@@ -43,7 +43,7 @@ mapper.mapper # A dictionary with all the gene Ids and gene symbols
 res['Symbol'] = res.index.map(mapper.mapper)
 res # Now contains the actual gene symbols
 
-Filtering of the dataframe:
+# Filtering of the dataframe:
 res = res[res.baseMean >= 10]
 
 sigs = res[(res.padj < 0.05) & (abs(res.log2FoldChange) > 0.5)] # Finding significant differentially expressed genes (P adjustev value < 0.05, absolute value log 2 fold change filter > 0.5 means genes that actually changed at least 0.5 log fold)
