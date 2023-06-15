@@ -38,4 +38,49 @@ fasta = list(SeqIO.parse('seqs_ali.fasta', format = 'fasta'))
 # Length function will show that all the aligned sequences are the same length
 for entry in fasta:
   print(len(entry.seq))
+
+# To compare the proteins we will use the spike protein region which can be retrieved from the NCBI page for the reference strain.
+# Spike protein region for coronavirus reference strain: 21563..25384
+
+# We need to find the spike protein region for the aligned sequence. This function will add the gaps to the sequence length. 
+def gapped_pos(seq, pos):
+  non_gap = 0
+  gaps = 0
+  for nt in seq:
+    if nt != '-':
+      non_gap += 1
+    else:
+      gaps += 1
+    if non_gap == pos:
+      return pos + gaps
+
+# Test: we should get 6 a's + 2 gaps which gives us 8.
+gapped_pos('aaa-aa-a', 6)
+
+# We need to find the gapped position for the coronavirus spike protein. Only need to do one because the sequences are already aligned. If there are no gaps the position output will be the same as the reference. 
+gapped_pos(seqs['Alpha_Strain'].seq, 21563)
+gapped_pos(seqs['Alpha_Strain'].seq, 25384)
+
+# To find the sequence of the spike protein
+spikes = {}
+for seq in fasta:
+  spikes[seq.id] = seq.seq[21563-1:25384]
+
+# Print the beginning of the sequence to make sure it starts with ATG
+for spike in spikes:
+  print(spikes[spike][0:10])
+
+# To compare the reference strain to the variants 
+def get_mutations(initial, variant):
+  seqs = list(zip(initial, variant))
+  for pos, nt in enumerate(seqs):
+    if nt[0] != nt[1]:
+      print(nt[0].upper() + str(pos) + nt[1].upper())
+
+# To print the nucleotide differences between the two strains (frame deletions or insertions)
+get_mutations(spikes['Wuhan_strain'], spikes['B.1.1.529|Omicron'])
+
+
+
+
   
