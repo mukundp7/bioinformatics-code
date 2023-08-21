@@ -26,7 +26,7 @@ DNA_Codons = {
     "TAA": "_", "TAG": "_", "TGA": "_"
 }
 
-# Validation of a DNA string:
+# Validation of a DNA String:
 def validateSeq(seq):
     tmpseq = seq.upper()
     for nuc in tmpseq:
