@@ -111,7 +111,7 @@ def get_aa_mutations(initial, variant):
 get_aa_mutations(seqs['Reference_Strain'], seqs['Variant_Strain'])
 len(get_aa_mutations(seqs['Reference_Strain'], seqs['Variant_Strain']))
 
-# Charting the differences in spike proteins
+# Charting the differences in spike proteins:
 import matplotlib.pyplot as plt
 
 mutations = {}
