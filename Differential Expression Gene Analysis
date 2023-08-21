@@ -11,9 +11,9 @@ import pandas as pd
 # Generating a counts table from our csv data:
 counts = pd.read_csv('count_table.csv')
 
-counts = counts.set_index('GeneID') # Set the dataframe index column to the GeneID
-counts = counts[counts.sum(axis = 1) > 0] # Get rid of columns with zero counts
-counts = counts.transpose() # For pyedeseq2 you must transpose the counts table
+counts = counts.set_index('GeneID') # Set the dataframe index column to the GeneID.
+counts = counts[counts.sum(axis = 1) > 0] # Get rid of columns with zero counts.
+counts = counts.transpose() # For pyedeseq2 you must transpose the counts table.
 
 counts = counts.round(decimals=0, out=None) # Might be needed
 
